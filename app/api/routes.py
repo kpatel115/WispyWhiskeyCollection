@@ -20,12 +20,11 @@ def create_whiskey(current_user_token):
     strength = request.json['strength']
     size = request.json['size']
     notes = request.json['notes']
-    date_added = request.json['date_added']
     user_token = current_user_token.token
 
     print(f'SuperTest (token): {current_user_token.token}')
 
-    whiskey = Whiskey(name,category,distillery,bottler,bottling_series,year_bottled,strength,size,notes,date_added, user_token=user_token)
+    whiskey = Whiskey(name,category,distillery,bottler,bottling_series,year_bottled,strength,size,notes, user_token=user_token)
 
     db.session.add(whiskey)
     db.session.commit()
@@ -68,7 +67,6 @@ def update_whiskey(current_user_token, id):
     whiskey.strength = req['strength']
     whiskey.size = req['size']
     whiskey.notes = req['notes']
-    whiskey.date_added = req['date_added']
     whiskey.user_token = current_user_token.token
 
     db.session.commit()

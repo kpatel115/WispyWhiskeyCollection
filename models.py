@@ -66,10 +66,9 @@ class Whiskey(db.Model):
     strength = db.Column(db.String(200))
     size = db.Column(db.String(200))
     notes = db.Column(db.String(300))
-    date_added = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
     user_token = db.Column(db.String, db.ForeignKey('user.token'), nullable = False)
 
-    def __init__(self,name,category,distillery,bottler,bottling_series,year_bottled,strength,size,notes,date_added,user_token, id = ''):
+    def __init__(self,name,category,distillery,bottler,bottling_series,year_bottled,strength,size,notes,user_token, id = ''):
         self.id = self.set_id()
         self.name = name
         self.category = category
@@ -80,7 +79,6 @@ class Whiskey(db.Model):
         self.strength = strength
         self.size = size
         self.notes = notes
-        self.date_added = date_added
         self.user_token = user_token
 
 
@@ -92,7 +90,7 @@ class Whiskey(db.Model):
 
 class WhiskeySchema(ma.Schema):
     class Meta:
-        fields = ['id', 'name','category','distillery','bottler','bottling_series','year_bottled','strength','size','notes','date_added']
+        fields = ['id', 'name','category','distillery','bottler','bottling_series','year_bottled','strength','size','notes']
 
 whiskey_schema = WhiskeySchema()
 whiskeys_schema = WhiskeySchema(many=True)
