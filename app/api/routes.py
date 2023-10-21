@@ -1,84 +1,88 @@
 from flask import Blueprint, request, jsonify, render_template
 from helpers import token_required
-from models import db, User, Cars, car_schema, cars_schema
+from models import db, User, Whiskey, whiskey_schema, whiskeys_schema
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
-@api.route('/cardata')
+@api.route('/whiskeydata')
 def getdata():
-    return{'lambo': 'mercy'}
+    return{'Texas': 'Ranger'}
 
-@api.route('/cars', methods = ['POST'])
+@api.route('/whiskeys', methods = ['POST'])
 @token_required
-def create_car(current_user_token):
+def create_whiskey(current_user_token):
     name = request.json['name']
-    make = request.json['make']
-    model = request.json['model']
-    year = request.json['year']
-    color = request.json['color']
-    mileage = request.json['mileage']
-    engine = request.json['engine']
-    seats = request.json['seats']
+    category = request.json['category']
+    distillery = request.json['distillery']
+    bottler = request.json['bottler']
+    bottling_series = request.json['bottling_series']
+    year_bottled = request.json['year_bottled']
+    strength = request.json['strength']
+    size = request.json['size']
+    notes = request.json['notes']
+    date_added = request.json['date_added']
     user_token = current_user_token.token
 
     print(f'SuperTest (token): {current_user_token.token}')
 
-    car = Cars(name, make, model, year, color, mileage, engine, seats, user_token=user_token)
+    whiskey = Whiskey(name,category,distillery,bottler,bottling_series,year_bottled,strength,size,notes,date_added, user_token=user_token)
 
-    db.session.add(car)
+    db.session.add(whiskey)
     db.session.commit()
 
-    response = car_schema.dump(car)
+    response = whiskey_schema.dump(whiskey)
     return jsonify(response)
 
-@api.route('/cars', methods = ['GET'])
+@api.route('/whiskeys', methods = ['GET'])
 @token_required
-def get_car(current_user_token):
+def get_whiskey(current_user_token):
     a_user = current_user_token.token
-    cars = Cars.query.filter_by(user_token = a_user).all()
-    response = cars_schema.dump(cars)
+    whiskeys = Whiskey.query.filter_by(user_token = a_user).all()
+    response = whiskeys_schema.dump(whiskeys)
     return jsonify(response)
 
-@api.route('/cars/<id>', methods = ['GET'])
+@api.route('/whiskeys/<id>', methods = ['GET'])
 @token_required
-def get_car_two(current_user_token, id):
+def get_whiskey_two(current_user_token, id):
     newt = current_user_token.token
     if newt == current_user_token.token:
-        car = Cars.query.get(id)
-        response = car_schema.dump(car)
+        whiskey = Whiskey.query.get(id)
+        response = whiskey_schema.dump(whiskey)
         return jsonify(response)
     else:
         return jsonify({"message": "Valid Token Required"}),401
     
 
 # update endpoint
-@api.route('/cars/<id>', methods = ['POST', 'PUT'])
+@api.route('/whiskeys/<id>', methods = ['POST', 'PUT'])
 @token_required
-def update_car(current_user_token, id):
+def update_whiskey(current_user_token, id):
     req = request.get_json()
-    car = Cars.query.get(id)
-    car.name = req['name']
-    car.make = req['make']
-    car.model = req['model']
-    car.year = req['year']
-    car.color = req['color']
-    car.mileage = req['mileage']
-    car.engine = req['engine']
-    car.seats = req['seats']
-    car.user_token = current_user_token.token
+    whiskey = Whiskey.query.get(id)
+    whiskey.name = req['name']
+    whiskey.category = req['category']
+    whiskey.distillery = req['distillery']
+    whiskey.bottler = req['bottler']
+    whiskey.bottling_series = req['bottling_series']
+    whiskey.year_bottled = req['year_bottled']
+    whiskey.strength = req['strength']
+    whiskey.size = req['size']
+    whiskey.notes = req['notes']
+    whiskey.date_added = req['date_added']
+    whiskey.user_token = current_user_token.token
 
     db.session.commit()
-    response = car_schema.dump(car)
+    response = whiskey_schema.dump(whiskey)
     return jsonify(response)
 
 # delete endpoint
-@api.route('/cars/<id>', methods = ['DELETE'])
+@api.route('/whiskeys/<id>', methods = ['DELETE'])
 @token_required
-def delete_car(current_user_token, id):
-    car = Cars.query.get(id)
-    db.session.delete(car)
+def delete_whiskey(current_user_token, id):
+    whiskey = Whiskey.query.get(id)
+    db.session.delete(whiskey)
     db.session.commit()
-    response = car_schema.dump(car)
+    response = whiskey_schema.dump(whiskey)
     return jsonify(response)
 
 

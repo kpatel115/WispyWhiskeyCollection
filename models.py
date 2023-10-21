@@ -55,28 +55,32 @@ class User(db.Model, UserMixin):
 
 # replace contacts from a user with 
 # cars from a logged in user
-class Cars(db.Model):
+class Whiskey(db.Model):
     id = db.Column(db.String, primary_key = True)
     name = db.Column(db.String(300), nullable = False)
-    make = db.Column(db.String(150))
-    model = db.Column(db.String(200))
-    year = db.Column(db.String(20))
-    color = db.Column(db.String(200))
-    mileage = db.Column(db.String(200))
-    engine = db.Column(db.String(200))
-    seats = db.Column(db.String(20))
+    category = db.Column(db.String(200))
+    distillery = db.Column(db.String(200))
+    bottler = db.Column(db.String(200))
+    bottling_series = db.Column(db.String(200))
+    year_bottled = db.Column(db.String(200))
+    strength = db.Column(db.String(200))
+    size = db.Column(db.String(200))
+    notes = db.Column(db.String(300))
+    date_added = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
     user_token = db.Column(db.String, db.ForeignKey('user.token'), nullable = False)
 
-    def __init__(self,name,make,model,year,color,mileage,engine,seats,user_token, id = ''):
+    def __init__(self,name,category,distillery,bottler,bottling_series,year_bottled,strength,size,notes,date_added,user_token, id = ''):
         self.id = self.set_id()
         self.name = name
-        self.make = make
-        self.model = model
-        self.year = year
-        self.color = color
-        self.mileage = mileage
-        self.engine = engine
-        self.seats = seats
+        self.category = category
+        self.distillery = distillery
+        self.bottler = bottler
+        self.bottling_series = bottling_series
+        self.year_bottled = year_bottled
+        self.strength = strength
+        self.size = size
+        self.notes = notes
+        self.date_added = date_added
         self.user_token = user_token
 
 
@@ -86,9 +90,9 @@ class Cars(db.Model):
     def set_id(self):
         return (secrets.token_urlsafe())
 
-class CarSchema(ma.Schema):
+class WhiskeySchema(ma.Schema):
     class Meta:
-        fields = ['id', 'name','make', 'model', 'year', 'color', 'mileage', 'engine', 'seats']
+        fields = ['id', 'name','category','distillery','bottler','bottling_series','year_bottled','strength','size','notes','date_added']
 
-car_schema = CarSchema()
-cars_schema = CarSchema(many=True)
+whiskey_schema = WhiskeySchema()
+whiskeys_schema = WhiskeySchema(many=True)
